@@ -4,6 +4,9 @@
 
 #include "modele/Modele2D.h"
 #include "util/Parsing.h"
+#include "affichage/Grille.h"
+#include "affichage/AffichageTextures.h"
+#include "affichage/AffichageIDs.h"
 
 using namespace std;
 
@@ -23,11 +26,11 @@ int main(int argc, char* argv[]) {
     
     vector<Point> points = creerPointsDepuisLigne(args);
 
-    ModeleScene modele;
+    Modele2D modele;
     modele.initialiserPoints(points);
+    Grille grille;
     
     // Ce sont différentes textures possibles. Seules les 2 premières sont utilisées dans les scénarios du TP.
-    vector<char> texturesNuages = {'o', '#', '$'};
     string cmd;
     
     // Menu
@@ -51,11 +54,10 @@ int main(int argc, char* argv[]) {
             modele.afficherListePoints(cout);
 
         } else if (cmd == "d") {
-            // Déplacement d'un point
             cout << "ID du point à déplacer: ";
             string ligne;
             getline(cin, ligne);
-            int id = 0;
+            int id;
             {
                 istringstream iss(ligne);
                 iss >> id;
@@ -63,15 +65,8 @@ int main(int argc, char* argv[]) {
 
             cout << "Nouvelle position (x y): ";
             getline(cin, ligne);
-
-            int x = 0, y = 0;
-
-            if (!ligne.empty() && ligne.front() == '(' && ligne.back() == ')') {
-                string inner = ligne.substr(1, ligne.size() - 2); 
-                replace(inner.begin(), inner.end(), ',', ' ');    
-                istringstream iss(inner);
-                iss >> x >> y;
-            } else {
+            int x, y;
+            {
                 istringstream iss(ligne);
                 iss >> x >> y;
             }
@@ -94,6 +89,26 @@ int main(int argc, char* argv[]) {
                 cout << "Erreur: aucun point avec l'ID " << id << ".\n";
             }
 
+        } else if (cmd == "f") {
+            cout << "IDs des points à fusionner dans un nuage (ex: 0 2 4): ";
+            string ligne;
+            getline(cin, ligne);
+            istringstream iss(ligne);
+            vector<int> ids;
+            int id;
+            while (iss >> id) {
+                ids.push_back(id);
+            }
+
+            if (!modele.fusionnerPointsDansNuage(ids)) {
+                cout << "Erreur: IDs invalides ou fusion impossible.\n";
+            }
+        } else if (cmd == "o1") {
+            AffichageTextures vue;
+            vue.afficher(modele, grille);
+        } else if (cmd == "o2") {
+            AffichageIDs vue;
+            vue.afficher(modele, grille);
         } else {
             cout << "Commande inconnue.\n";
         }

@@ -1,24 +1,36 @@
 #pragma once
 
 #include <vector>
-#include <algorithm>
 #include <iostream>
-#include "Point.h"
+#include <string>
 
-class ModeleScene {
+#include "Point.h"
+#include "Nuage.h"
+
+class Modele2D {
 public:
     void initialiserPoints(const std::vector<Point>& pts);
 
-    const std::vector<Point> getPoints() const { return points_; }
+    const std::vector<Point>& getPoints() const { return points_; }
+    const std::vector<Nuage>& getNuages() const { return nuages_; }
 
     void afficherListePoints(std::ostream& os) const;
 
     Point* trouverPointParId(int id);
-
     bool deplacerPoint(int id, int newX, int newY);
-
     bool supprimerPoint(int id);
+
+    bool fusionnerPointsDansNuage(const std::vector<int>& ids);
+
+    char texturePrincipalePourPoint(int pointId) const;
 
 private:
     std::vector<Point> points_;
+    std::vector<Nuage> nuages_;
+
+    std::vector<char> texturesNuages_ {'o', '#'};
+    std::size_t nextTextureIndex_ = 0;
+
+    std::string texturesPourPoint(int pointId) const;
 };
+

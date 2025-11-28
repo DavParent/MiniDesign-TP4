@@ -7,11 +7,11 @@ public:
     static const int HAUTEUR = 20;
 
     Grille();
-
     void effacer();
     void tracerLigne(int x0, int y0, int x1, int y1);
     void afficher() const;
+    void dessinerCaractere(int x, int y, char c);
 
 private:
-    std::vector<std::vector<char>>& cells;
+    std::vector<std::vector<char>> cells_;
 };
