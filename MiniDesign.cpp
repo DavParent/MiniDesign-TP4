@@ -81,8 +81,18 @@ int main(int argc, char* argv[]) {
             }
 
         } else if (cmd == "s") {
-            // TODO : à implémenter plus tard
-            cout << "(TODO) Suppression pas encore implémentée.\n";
+            cout << "ID du point à supprimer: ";
+            string ligne;
+            getline(cin, ligne);
+            int id;
+            {
+                istringstream iss(ligne);
+                iss >> id;
+            }
+
+            if (!modele.supprimerPoint(id)) {
+                cout << "Erreur: aucun point avec l'ID " << id << ".\n";
+            }
 
         } else {
             cout << "Commande inconnue.\n";
