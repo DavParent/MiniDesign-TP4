@@ -40,6 +40,14 @@ Point* Modele2D::trouverPointParId(int id) {
     return nullptr;
 }
 
+const Point* Modele2D::trouverPointParIdConst(int id) const {
+    for (const auto& p : points_) {
+        if (p.getId() == id)
+            return &p;
+    }
+    return nullptr;
+}
+
 bool Modele2D::deplacerPoint(int id, int newX, int newY) {
     Point* p = trouverPointParId(id);
     if (!p) return false;
@@ -103,4 +111,12 @@ char Modele2D::texturePrincipalePourPoint(int pointId) const {
         }
     }
     return '\0';
+}
+
+void Modele2D::viderSurface(){
+    surfaces_.clear();
+}
+
+void Modele2D::ajouterSurface(const Surface& s){
+    surfaces_.push_back(s);
 }
