@@ -1,11 +1,12 @@
 #pragma once
+#include "NuageElement.h"
 #include <string>
 #include <vector>
 
-class Point {
+class Point : public NuageElement {
 public:
-    Point(int id_, int x_, int y_) : id(id_), x(x_), y(y_) {}
-    int getId() const { return id; }
+    Point(int id, int x, int y) : NuageElement(id), x(x), y(y) {}
+    
     int getY() const { return y; }
     int getX() const { return x; }
 
@@ -15,7 +16,7 @@ public:
     }
     
 private:
-    int id;
     int x;
     int y;
 };
+

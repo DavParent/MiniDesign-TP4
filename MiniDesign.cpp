@@ -2,11 +2,8 @@
 #include <sstream>
 #include <string>
 
-#include "modele/Modele2D.h"
+#include "controle/Controller.h"
 #include "util/Parsing.h"
-#include "affichage/Grille.h"
-#include "affichage/AffichageTextures.h"
-#include "affichage/AffichageIDs.h"
 
 using namespace std;
 
@@ -26,9 +23,8 @@ int main(int argc, char* argv[]) {
     
     vector<Point> points = creerPointsDepuisLigne(args);
 
-    Modele2D modele;
-    modele.initialiserPoints(points);
-    Grille grille;
+    Controller controller;
+    controller.initialiserModele(points);
     
     // Ce sont différentes textures possibles. Seules les 2 premières sont utilisées dans les scénarios du TP.
     string cmd;
@@ -44,6 +40,8 @@ int main(int argc, char* argv[]) {
              << "s  - Supprimer un point (ID)\n"
              << "c1 - Créer les surfaces selon l'ordre des IDs\n"
              << "c2 - Créer les surfaces selon la distance minimale\n"
+             << "u  - Annuler (undo)\n"
+             << "r  - Refaire (redo)\n"
              << "q  - Quitter\n> ";
 
         getline(cin, cmd);
@@ -51,7 +49,7 @@ int main(int argc, char* argv[]) {
         if (cmd == "q") {
             break;
         } else if (cmd == "a") {
-            modele.afficherListePoints(cout);
+            controller.afficherListe();
 
         } else if (cmd == "d") {
             cout << "ID du point à déplacer: ";
@@ -71,9 +69,7 @@ int main(int argc, char* argv[]) {
                 iss >> x >> y;
             }
 
-            if (!modele.deplacerPoint(id, x, y)) {
-                cout << "Erreur: aucun point avec l'ID " << id << ".\n";
-            }
+            controller.deplacer(id, x, y);
 
         } else if (cmd == "s") {
             cout << "ID du point à supprimer: ";
@@ -85,9 +81,7 @@ int main(int argc, char* argv[]) {
                 iss >> id;
             }
 
-            if (!modele.supprimerPoint(id)) {
-                cout << "Erreur: aucun point avec l'ID " << id << ".\n";
-            }
+            controller.supprimer(id);
 
         } else if (cmd == "f") {
             cout << "IDs des points à fusionner dans un nuage (ex: 0 2 4): ";
@@ -100,15 +94,20 @@ int main(int argc, char* argv[]) {
                 ids.push_back(id);
             }
 
-            if (!modele.fusionnerPointsDansNuage(ids)) {
-                cout << "Erreur: IDs invalides ou fusion impossible.\n";
-            }
+            controller.fusionner(ids);
+            
         } else if (cmd == "o1") {
-            AffichageTextures vue;
-            vue.afficher(modele, grille);
+            controller.afficherAvecTextures();
         } else if (cmd == "o2") {
-            AffichageIDs vue;
-            vue.afficher(modele, grille);
+            controller.afficherAvecIDs();
+        } else if (cmd == "c1") {
+            controller.creerSurfacesParID();
+        } else if (cmd == "c2") {
+            controller.creerSurfacesParDistance();
+        } else if (cmd == "u") {
+            controller.undo();
+        } else if (cmd == "r") {
+            controller.redo();
         } else {
             cout << "Commande inconnue.\n";
         }

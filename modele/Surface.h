@@ -12,4 +12,4 @@ public:
 
 private:
     std::vector<int> pointIds_;
-}
+};

@@ -1,4 +1,5 @@
 #include "Nuage.h"
 
-Nuage::Nuage(char texture, const std::vector<int>& pointIds)
-    : texture_(texture), pointIds_(pointIds) { }
+Nuage::Nuage(int id, char texture, const std::vector<int>& elementIds)
+    : NuageElement(id), texture_(texture), elementIds_(elementIds) { }
+
