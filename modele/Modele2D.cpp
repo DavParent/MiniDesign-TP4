@@ -101,6 +101,12 @@ bool Modele2D::supprimerPoint(int id) {
         return false;
 
     points_.erase(it, points_.end());
+    
+    // Remove point from all nuages that contain it
+    for (auto& n : nuages_) {
+        n.retirerElement(id);
+    }
+    
     return true;
 }
 
@@ -201,5 +207,21 @@ void Modele2D::viderSurface(){
 
 void Modele2D::ajouterSurface(const Surface& s){
     surfaces_.push_back(s);
+}
+
+void Modele2D::ajouterElementDansNuage(int nuageId, int elementId) {
+    Nuage* n = trouverNuageParId(nuageId);
+    if (n) {
+        // Access private method via friend relationship
+        n->ajouterElement(elementId);
+    }
+}
+
+void Modele2D::retirerElementDeNuage(int nuageId, int elementId) {
+    Nuage* n = trouverNuageParId(nuageId);
+    if (n) {
+        // Access private method via friend relationship
+        n->retirerElement(elementId);
+    }
 }
 

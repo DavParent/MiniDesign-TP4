@@ -36,6 +36,9 @@ public:
     int fusionnerPointsDansNuage(const std::vector<int>& elementIds);
     std::vector<int> getNuagesContenant(int elementId) const;
     std::vector<const Point*> collecterPointsRecursif(int nuageId) const;
+    
+    void ajouterElementDansNuage(int nuageId, int elementId);
+    void retirerElementDeNuage(int nuageId, int elementId);
 
     char texturePrincipalePourPoint(int pointId) const;
 

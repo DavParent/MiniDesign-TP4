@@ -5,6 +5,7 @@
 #include "../surfaces/SurfaceParDistance.h"
 #include "../commandes/CommandeDeplacerPoint.h"
 #include "../commandes/CommandeSupprimerPoint.h"
+#include "../commandes/CommandeFusionnerNuage.h"
 #include <iostream>
 
 Controller::Controller() {
@@ -59,10 +60,8 @@ void Controller::supprimer(int id) {
 }
 
 void Controller::fusionner(const std::vector<int>& elementIds) {
-    int nuageId = m_modele.fusionnerPointsDansNuage(elementIds);
-    if (nuageId == -1) {
-        std::cout << "Erreur: IDs invalides ou fusion impossible.\n";
-    }
+    auto cmd = std::make_unique<CommandeFusionnerNuage>(elementIds);
+    executeCommand(std::move(cmd));
 }
 
 void Controller::creerSurfacesParID() {

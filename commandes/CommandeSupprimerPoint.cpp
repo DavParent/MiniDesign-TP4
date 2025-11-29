@@ -14,7 +14,8 @@ void CommandeSupprimerPoint::annuler(Modele2D& modele) {
     // Recreate the point with its original ID and position
     modele.ajouterPointAvecID(m_idPoint, m_xAvant, m_yAvant);
     
-    // Note: Re-adding point to nuages is complex with current architecture
-    // This would need additional model support to restore nuage memberships
-    // For now, this implements basic undo of point deletion
+    // Re-add point to all nuages it belonged to
+    for (int nuageId : m_idsNuagesAvant) {
+        modele.ajouterElementDansNuage(nuageId, m_idPoint);
+    }
 }

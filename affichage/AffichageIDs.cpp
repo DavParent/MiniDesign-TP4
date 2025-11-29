@@ -6,14 +6,30 @@
 void AffichageIDs::afficher(const Modele2D& modele, Grille& grille) {
     grille.effacer();
 
+    // Draw surfaces first (as lines)
+    for (const auto& surface : modele.getSurfaces()) {
+        const auto& pointIds = surface.getPointIds();
+        if (pointIds.size() < 2) continue;
+        
+        // Draw lines connecting consecutive points
+        for (size_t i = 0; i < pointIds.size(); ++i) {
+            size_t nextIdx = (i + 1) % pointIds.size();
+            const Point* p1 = modele.trouverPointParIdConst(pointIds[i]);
+            const Point* p2 = modele.trouverPointParIdConst(pointIds[nextIdx]);
+            
+            if (p1 && p2) {
+                grille.tracerLigne(p1->getX(), p1->getY(), p2->getX(), p2->getY());
+            }
+        }
+    }
+
+    // Draw point IDs on top of lines
     for (const auto& p : modele.getPoints()) {
         int id = p.getId();
         char symbole = '0' + (id % 10);
 
         grille.dessinerCaractere(p.getX(), p.getY(), symbole);
     }
-
-    // Plus tard: tracer aussi les surfaces
 
     grille.afficher();
 }
