@@ -2,16 +2,16 @@
 #include "../modele/Modele2D.h"
 #include "../modele/Point.h"
 #include "Grille.h"
+#include <string>
 
 void AffichageTextures::afficher(const Modele2D& modele, Grille& grille) {
     grille.effacer();
 
-    // Draw surfaces first (as lines)
+    // Tracer les lignes (surfaces)
     for (const auto& surface : modele.getSurfaces()) {
         const auto& pointIds = surface.getPointIds();
         if (pointIds.size() < 2) continue;
         
-        // Draw lines connecting consecutive points
         for (size_t i = 0; i < pointIds.size(); ++i) {
             size_t nextIdx = (i + 1) % pointIds.size();
             const Point* p1 = modele.trouverPointParIdConst(pointIds[i]);
@@ -23,12 +23,12 @@ void AffichageTextures::afficher(const Modele2D& modele, Grille& grille) {
         }
     }
 
-    // Draw points on top of lines
+    // Dessiner les points avec TOUTES leurs textures
     for (const auto& p : modele.getPoints()) {
-        char tex = modele.texturePrincipalePourPoint(p.getId());
-        char symbole = (tex != '\0') ? tex : '.';
+        std::string tex = modele.textureBrutePourPoint(p.getId());
+        std::string symbole = (!tex.empty()) ? tex : ".";
 
-        grille.dessinerCaractere(p.getX(), p.getY(), symbole);
+        grille.dessinerSymbole(p.getX(), p.getY(), symbole);
     }
 
     grille.afficher();

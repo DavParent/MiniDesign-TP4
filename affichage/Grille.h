@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string> 
 
 class Grille {
 public:
@@ -10,8 +11,9 @@ public:
     void effacer();
     void tracerLigne(int x0, int y0, int x1, int y1);
     void afficher() const;
-    void dessinerCaractere(int x, int y, char c);
+    
+    void dessinerSymbole(int x, int y, const std::string& symbole);
 
 private:
-    std::vector<std::vector<char>> cells_;
+    std::vector<std::vector<std::string>> cells_;
 };

@@ -4,39 +4,34 @@
 
 using namespace std;
 
+// Initialise avec des espaces (chaînes)
 Grille::Grille()
-    : cells_(HAUTEUR, std::vector<char>(LARGEUR, ' ')) { }
+    : cells_(HAUTEUR, std::vector<string>(LARGEUR, " ")) { }
 
 void Grille::effacer(){
     for (int y = 0; y < HAUTEUR; y++) {
         for (int x = 0; x < LARGEUR; x++){
-            cells_[y][x] = ' ';
+            cells_[y][x] = " ";
         }
     }
 }
 
 void Grille::tracerLigne(int x0, int y0, int x1, int y1) {
-    // Distance verticale
     int lignes = abs(y1 - y0);
-    // Si la ligne est horizontale 
     if (lignes == 0) {
-        // On prend distance horizontale 
         lignes = abs(x1 - x0);
         for (int i = 0; i <= lignes; ++i) {
-            // On trace chaque point de la ligne, de gauche à droite ou de droite à gauche selon la direction.
             int x = (x0 < x1) ? x0 + i : x0 - i;
             if (y1 >= 0 && y1 < HAUTEUR && x >= 0 && x < LARGEUR)
-                cells_[y1][x] = '/';
+                cells_[y1][x] = "/"; // Utilise une chaîne "/"
         }
     } else {
-        // Si la ligne est verticale ou diagonale 
         for (int i = 0; i <= lignes; ++i) {
             double t = (double)i / lignes;
-            // On fait une interpolation lineaire
             int x = round(x0 + t * (x1 - x0));
             int y = round(y0 + t * (y1 - y0));
             if (x >= 0 && x < LARGEUR && y >= 0 && y < HAUTEUR)
-                cells_[y][x] = '/';
+                cells_[y][x] = "/"; // Utilise une chaîne "/"
         }
     }
 }
@@ -49,8 +44,9 @@ void Grille::afficher() const{
     }
 };
 
-void Grille::dessinerCaractere(int x, int y, char c) {
+// Nouvelle méthode adaptée
+void Grille::dessinerSymbole(int x, int y, const std::string& s) {
     if (x >= 0 && x < LARGEUR && y >= 0 && y < HAUTEUR) {
-        cells_[y][x] = c;
+        cells_[y][x] = s;
     }
 };

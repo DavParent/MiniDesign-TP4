@@ -144,6 +144,17 @@ string Modele2D::texturesPourPoint(int pointId) const {
     return "";
 }
 
+std::string Modele2D::textureBrutePourPoint(int pointId) const {
+    std::string result;
+    for (const auto& n : nuages_) {
+        const auto& ids = n.getElementIds();
+        if(find(ids.begin(), ids.end(), pointId) != ids.end()){
+            result += n.getTexture();
+        }
+    }
+    return result;
+}
+
 int Modele2D::fusionnerPointsDansNuage(const vector<int>& elementIds) {
     if (elementIds.empty()) return -1;
 

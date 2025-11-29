@@ -41,6 +41,7 @@ public:
     void retirerElementDeNuage(int nuageId, int elementId);
 
     char texturePrincipalePourPoint(int pointId) const;
+    std::string textureBrutePourPoint(int pointId) const;
 
     void viderSurface();
     void ajouterSurface(const Surface& s);
