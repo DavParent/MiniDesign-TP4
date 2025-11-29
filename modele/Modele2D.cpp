@@ -36,16 +36,17 @@ void Modele2D::afficherListePoints(std::ostream& os) const {
     }
 
     for (const auto& n : nuages_) {
-        os << "Nuage " << n.getId() << " '" << n.getTexture() << "' contient les elements: ";
-        const auto& ids = n.getElementIds();
-        for (size_t i = 0; i < ids.size(); ++i) {
-            os << ids[i];
-            if (i + 1 < ids.size())
-                os << ", ";
+            os << "Nuage '" << n.getTexture() << "' contient les points: ";
+            
+            const auto& ids = n.getElementIds();
+            for (size_t i = 0; i < ids.size(); ++i) {
+                os << ids[i];
+                if (i + 1 < ids.size())
+                    os << ", ";
+            }
+            os << "\n";
         }
-        os << "\n";
-    }
-}    
+}
 
 Point* Modele2D::trouverPointParId(int id) {
     for (auto& p : points_) {
@@ -124,19 +125,23 @@ bool Modele2D::supprimerNuage(int id) {
 
 string Modele2D::texturesPourPoint(int pointId) const {
     string result;
-    bool first = true;
+    bool found = false;
+    
+    // On construit la chaîne de caractères (ex: o#)
     for (const auto& n : nuages_) {
         const auto& ids = n.getElementIds();
         if(find(ids.begin(), ids.end(), pointId) != ids.end()){
-            if (!first)
-                result += " ";
-            result += "'";
             result += n.getTexture();
-            result += "'";
-            first = false;
+            found = true;
         }
     }
-    return result;
+    
+    // On ajoute les guillemets autour du tout seulement si on a trouvé des textures
+    if (found) {
+        return "'" + result + "'";
+    }
+    
+    return "";
 }
 
 int Modele2D::fusionnerPointsDansNuage(const vector<int>& elementIds) {
