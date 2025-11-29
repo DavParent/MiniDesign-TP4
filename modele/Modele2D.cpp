@@ -28,7 +28,7 @@ void Modele2D::afficherListePoints(std::ostream& os) const {
            << p.getX() << "," << p.getY()
            << ") textures:";
 
-        string tex = texturesPourPoint(p.getId());
+        string tex = texturesPourPoint(p.getId()); 
         if (!tex.empty()) {
             os << " " << tex;
         }
@@ -36,16 +36,16 @@ void Modele2D::afficherListePoints(std::ostream& os) const {
     }
 
     for (const auto& n : nuages_) {
-            os << "Nuage '" << n.getTexture() << "' contient les points: ";
-            
-            const auto& ids = n.getElementIds();
-            for (size_t i = 0; i < ids.size(); ++i) {
-                os << ids[i];
-                if (i + 1 < ids.size())
-                    os << ", ";
-            }
-            os << "\n";
+        os << n.getId() << ": Nuage '" << n.getTexture() << "' contient les éléments: ";
+        
+        const auto& ids = n.getElementIds();
+        for (size_t i = 0; i < ids.size(); ++i) {
+            os << ids[i];
+            if (i + 1 < ids.size())
+                os << " "; 
         }
+        os << "\n";
+    }
 }
 
 Point* Modele2D::trouverPointParId(int id) {
@@ -125,22 +125,28 @@ bool Modele2D::supprimerNuage(int id) {
 
 string Modele2D::texturesPourPoint(int pointId) const {
     string result;
-    bool found = false;
-    
-    // On construit la chaîne de caractères (ex: o#)
+    bool foundAny = false;
+
     for (const auto& n : nuages_) {
-        const auto& ids = n.getElementIds();
-        if(find(ids.begin(), ids.end(), pointId) != ids.end()){
+        std::vector<const Point*> pointsDuNuage = collecterPointsRecursif(n.getId());
+        
+        bool estDansNuage = false;
+        for (const Point* p : pointsDuNuage) {
+            if (p->getId() == pointId) {
+                estDansNuage = true;
+                break;
+            }
+        }
+
+        if (estDansNuage) {
             result += n.getTexture();
-            found = true;
+            foundAny = true;
         }
     }
     
-    // On ajoute les guillemets autour du tout seulement si on a trouvé des textures
-    if (found) {
+    if (foundAny) {
         return "'" + result + "'";
     }
-    
     return "";
 }
 
